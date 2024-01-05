@@ -3,15 +3,16 @@ import torch
 import torch.nn as nn
 
 
-class InputEmbedding:
+class InputEmbedding(nn.Module):
     def __init__(self, d_model: int, vocab_size: int):
         super().__init__()
         self.d_model = d_model
         self.vocab_size = vocab_size
-        self.embedding = nn.Embedding(vocab_size, self.d_model)
+        self.embedding = nn.Embedding(vocab_size, d_model)
     
     def forward(self, x):
         return self.embedding(x) * math.sqrt(self.d_model)
+
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int, seq_length: int, dropout_p: float) -> None:
@@ -54,7 +55,7 @@ class LayerNormalization(nn.Module):
 
 class FeedForwardBlock(nn.Module):
     def __init__(self, d_model: int, d_ff: int, dropout_p: float) -> None:
-        super.__init__()
+        super().__init__()
         self.linear_1 = nn.Linear(d_model, d_ff)
         self.dropout = nn.Dropout(dropout_p)
         self.linear_2 = nn.Linear(d_ff, d_model)
@@ -86,7 +87,6 @@ class MultiHeadAttentionBlock(nn.Module):
         d_k = query.shape[-1]
         
         attention_scores = (query @ key.transpose(-2, -1)) / math.sqrt(d_k)  # (B, h, seq, seq)
-        print(attention_scores.shape)
         if mask is not None:
             attention_scores.masked_fill_(mask == 0, -1e9)
         attention_scores = attention_scores.softmax(dim = -1) # (B, h, seq, seq), dim=1 because we then multiply the last dim of attn by value
@@ -122,7 +122,7 @@ class ResidualConnection(nn.Module):
         self.norm = LayerNormalization()
         
     def forward(self, x, sublayer):
-        return x + self.dropout(sublayer + self.norm(x))
+        return x + self.dropout(sublayer(self.norm(x)))
 
 class EncoderBlock(nn.Module):
     def __init__(self, self_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock, dropout_p: float) -> None:
@@ -132,8 +132,8 @@ class EncoderBlock(nn.Module):
         self.residual_connections = nn.ModuleList([ResidualConnection(dropout_p) for _ in range(2)])
     
     def forward(self, x, source_mask):
-        x = self.residual_connections[0](x, self.self_attention_block(x, x, x, source_mask))
-        x = self.residual_connections[1](x, self.feed_forward_block(x))
+        x = self.residual_connections[0](x, lambda x: self.self_attention_block(x, x, x, source_mask))
+        x = self.residual_connections[1](x, self.feed_forward_block)
         return x
 
 class Encoder(nn.Module):
@@ -142,9 +142,9 @@ class Encoder(nn.Module):
         self.layers = layers
         self.norm = LayerNormalization()
         
-    def forward(self, x):
+    def forward(self, x, mask):
         for layer in self.layers:
-            x = layer(x)
+            x = layer(x, mask)
         return self.norm(x)
 
 
@@ -157,8 +157,8 @@ class DecoderBlock(nn.Module):
         self.residual_connections = nn.ModuleList([ResidualConnection(dropout_p) for _ in range(3)])
     
     def forward(self, x, encoder_output, source_mask, target_mask):
-        x = self.residual_connections[0](x, self.self_atention_block(x, x, x, target_mask))
-        x = self.residual_connections[1](x, self.cross_attention_block(x, encoder_output, encoder_output, source_mask))
+        x = self.residual_connections[0](x, lambda x: self.self_atention_block(x, x, x, target_mask))
+        x = self.residual_connections[1](x, lambda x: self.cross_attention_block(x, encoder_output, encoder_output, source_mask))
         x = self.residual_connections[2](x, self.feed_forward_block)
         return x
     
@@ -186,6 +186,7 @@ class ProjectionLayer(nn.Module):
 
 class Transformer(nn.Module):
     def __init__(self, encoder: Encoder, decoder: Decoder, source_embedding: InputEmbedding, target_embedding: InputEmbedding, source_position: PositionalEncoding, target_position: PositionalEncoding, projection_layer: ProjectionLayer) -> None:
+        super().__init__()
         self.encoder = encoder
         self.decoder = decoder
         self.source_embedding = source_embedding
@@ -202,7 +203,7 @@ class Transformer(nn.Module):
     def decode(self, encoder_output, source_mask, target, target_mask):
         target = self.target_embedding(target)
         target = self.target_position(target)
-        return self.decode(target, encoder_output, source_mask, target_mask)
+        return self.decoder(target, encoder_output, source_mask, target_mask)
     
     def project(self, x):
         return self.projection_layer(x)
