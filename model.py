@@ -214,7 +214,7 @@ def build_transformer(
     source_seq_len: int,
     target_seq_len: int,
     d_model: int = 512,
-    N: int = 6,
+    N: int = 6,  # TODO: revert back to 6
     h: int = 8,
     dropout_p: float = 0.1,
     d_ff: int = 2048
