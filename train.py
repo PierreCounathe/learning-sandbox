@@ -94,7 +94,7 @@ def get_or_build_tokenizer(config, dataset, language):
 
 
 def get_dataset(config):
-    dataset_raw = load_dataset("opus_books", f"{config['source_language']}-{config['target_language']}", split="train")
+    dataset_raw = load_dataset("opus_books", f"{config['source_language']}-{config['target_language']}", split="train[:15000]")
     
     source_tokenizer = get_or_build_tokenizer(config, dataset_raw, config["source_language"])
     target_tokenizer = get_or_build_tokenizer(config, dataset_raw, config["target_language"])
