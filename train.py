@@ -150,6 +150,7 @@ def train_model(config):
         print(f"Preloading model {model_filename}")
         state = torch.load(model_filename)
         initial_epoch = state["epoch"] + 1
+        model.load_state_dict(state["model_state_dict"])
         optimizer.load_state_dict(state["optimizer_state_dict"])
         global_step = state["global_step"]
     

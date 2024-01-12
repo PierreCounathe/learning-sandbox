@@ -1,0 +1,9 @@
+datasets==2.16.1
+huggingface-hub==0.20.1
+numpy==1.26.3
+pandas==2.1.4
+tensorboard==2.15.1
+tensorboard-data-server==0.7.2
+tokenizers==0.15.0
+torch==2.1.2
+tqdm==4.66.1
