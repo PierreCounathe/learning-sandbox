@@ -5,7 +5,7 @@ def get_config():
         "batch_size": 8,
         "num_epochs": 20,
         "lr": 10**-4,
-        "seq_len": 250,
+        "seq_len": 500,
         "d_model": 512,
         "source_language": "en",
         "target_language": "fr",
