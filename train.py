@@ -9,7 +9,7 @@ from tokenizers.trainers import WordLevelTrainer
 from tokenizers.pre_tokenizers import Whitespace
 
 from pathlib import Path
-from config import get_config, get_weights_file_path
+from config import get_config, get_device, get_weights_file_path
 
 from dataset import BilingualDataset, causal_mask
 from model import build_transformer
@@ -131,7 +131,7 @@ def get_model(config, source_vocab_size, target_vocab_size):
 
 def train_model(config):
     # Define the device
-    device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    device = get_device()
     print(f"Training using device {device}")
     
     Path(config["model_folder"]).mkdir(parents=True, exist_ok=True)

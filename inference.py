@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 from train import get_dataset, get_model, get_or_build_tokenizer, run_validation
-from config import get_config, get_weights_file_path
+from config import get_config, get_device, get_weights_file_path
 from dataset import BilingualDataset
 
 
@@ -17,7 +17,7 @@ class CustomDataset(Dataset):
 
     
 if __name__ == "__main__":
-    device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    device = get_device()
     config = get_config()
     config["batch_size"] = 1
     
