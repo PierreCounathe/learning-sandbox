@@ -1,6 +1,6 @@
-# learning-sandbox
+# simple-implementations
 
-This repository stores implementations of Machine Learning and Deep Learning concepts, with the only objective of better understanding them.
+This repository stores implementations of simple Machine Learning and Deep Learning concepts, with the only objective of better understanding them.
 
 ## Projects list
 
