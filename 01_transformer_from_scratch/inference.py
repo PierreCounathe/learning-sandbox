@@ -28,7 +28,7 @@ if __name__ == "__main__":
     if config["preload"]:
         model_filename = get_weights_file_path(config, config["preload"])
         print(f"Preloading model {model_filename}")
-        state = torch.load(model_filename)
+        state = torch.load(model_filename, map_location=device)
         model.load_state_dict(state["model_state_dict"])
     
     while True:

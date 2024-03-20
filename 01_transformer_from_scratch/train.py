@@ -94,7 +94,7 @@ def get_or_build_tokenizer(config, dataset, language):
 
 
 def get_dataset(config):
-    dataset_raw = load_dataset("opus_books", f"{config['source_language']}-{config['target_language']}", split="train[:15000]")
+    dataset_raw = load_dataset("opus_books", f"{config['source_language']}-{config['target_language']}", split="train[:20000]")
     
     source_tokenizer = get_or_build_tokenizer(config, dataset_raw, config["source_language"])
     target_tokenizer = get_or_build_tokenizer(config, dataset_raw, config["target_language"])
@@ -148,7 +148,7 @@ def train_model(config):
     if config["preload"]:
         model_filename = get_weights_file_path(config, config["preload"])
         print(f"Preloading model {model_filename}")
-        state = torch.load(model_filename)
+        state = torch.load(model_filename, map_location=device)
         initial_epoch = state["epoch"] + 1
         model.load_state_dict(state["model_state_dict"])
         optimizer.load_state_dict(state["optimizer_state_dict"])
