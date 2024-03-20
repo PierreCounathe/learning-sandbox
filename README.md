@@ -1,4 +1,4 @@
-# learning-sandbox
+# simple-implementations
 
 This repository stores implementations of Machine Learning and Deep Learning concepts, with the only objective of better understanding them. All implementations use basic elements of foundational libraries, such as pytorch (and not its TransformerEncoderLayer module for instance).
 
