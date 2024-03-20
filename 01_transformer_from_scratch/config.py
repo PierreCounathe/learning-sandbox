@@ -5,13 +5,13 @@ def get_config():
         "batch_size": 8,
         "num_epochs": 20,
         "lr": 10**-4,
-        "seq_len": 250,
+        "seq_len": 370,
         "d_model": 512,
         "source_language": "en",
         "target_language": "fr",
         "model_folder": "weights",
         "model_basename": "tmodel_",
-        "preload": None,
+        "preload": '19',
         "tokenizer_file": "tokenizer_{0}.json",  # to be formatted
         "experiment_name": "runs/tmodel"
     }
