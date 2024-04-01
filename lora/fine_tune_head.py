@@ -3,9 +3,9 @@ import os
 from transformers import DataCollatorWithPadding, TrainingArguments, Trainer
 import wandb
 
-from p02_lora.load_model import load_pretrained_model
-from p02_lora.utils import load_small_imdb, define_preprocess_function, compute_metrics
-from p02_lora.config import get_config
+from lora.load_model import load_pretrained_model
+from lora.utils import load_small_imdb, define_preprocess_function, compute_metrics
+from lora.config import get_config
 
 def main():
     # Get the project's configuration
