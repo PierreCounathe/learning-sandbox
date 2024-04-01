@@ -1,0 +1,12 @@
+numpy==1.26.3
+pandas==2.1.4
+tensorboard==2.15.1
+tensorboard-data-server==0.7.2
+tokenizers==0.15.0
+torch==2.1.2
+tqdm==4.66.1
+transformers==4.39.0
+datasets==2.18.0
+accelerate==0.28.0
+wandb==0.16.4
+scikit-learn==1.4.1
