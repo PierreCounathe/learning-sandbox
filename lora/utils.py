@@ -8,9 +8,9 @@ def load_small_imdb():
     """
     imdb = load_dataset("imdb")
 
-    small_train_dataset = imdb["train"].shuffle(seed=42).select(list(range(3000)))
-    small_val_dataset = imdb["train"].shuffle(seed=42).select(list(range(3000, 3300)))
-    small_test_dataset = imdb["test"].shuffle(seed=42).select(list(range(300)))
+    small_train_dataset = imdb["train"].shuffle(seed=42).select(list(range(10000)))
+    small_val_dataset = imdb["train"].shuffle(seed=42).select(list(range(10000, 11000)))
+    small_test_dataset = imdb["test"].shuffle(seed=42).select(list(range(1000)))
 
     return {
         "train": small_train_dataset,
