@@ -6,6 +6,6 @@ This repository stores implementations of Machine Learning and Deep Learning con
 
 Each folder has its own README, containing a summary of the project and associated results.
 
-1. [**Transformer From Scratch:**](/01_transformer_from_scratch/) an encoder-decoder transformer built with basic Pytorch blocs, for machine translation
-2. [**LoRA:**](/02_lora/) (wip, to come in the following days)
-3. [**NeRF:**](/03_nerf/) (wip, to come in the following days)
+1. [**Transformer From Scratch:**](/transformer/) an encoder-decoder transformer built with basic Pytorch blocs, for machine translation
+2. [**LoRA:**](/lora/) scripts that compare the efficiency of fine-tuning a LM's head versus fine-tuning its Q, K and V projections with LoRA
+3. [**NeRF:**](/nerf/) (wip, to come in the following days)
