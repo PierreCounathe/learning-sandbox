@@ -9,11 +9,14 @@ def get_config():
         "training_arguments": {
             "output_dir": "lora-from-scratch",
             "learning_rate": 2e-5,
-            "per_device_train_batch_size": 8,
-            "per_device_eval_batch_size": 8,
-            "num_train_epochs": 5,
+            "per_device_train_batch_size": 32,
+            "per_device_eval_batch_size": 32,
+            "num_train_epochs": 15,
             "weight_decay": 0.01,
-            "save_strategy": "epoch",
+            "save_strategy": "steps",
+            "logging_steps": .1,
+            "evaluation_strategy": "steps",
+            "eval_steps": .1,
             "report_to": ["wandb"]
         },
         "wandb": {
