@@ -1,6 +1,6 @@
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-from p02_lora.config import get_device, get_config
+from lora.config import get_device, get_config
 
 CONFIG = get_config()
 
