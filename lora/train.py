@@ -10,7 +10,7 @@ from lora.utils import load_small_imdb, define_preprocess_function, compute_metr
 from lora.config import get_config
 
 
-def main(lora_rank=None, lora_alpha=None, load_model=None, save_model=None):
+def main(lora_rank=None, lora_alpha=None, load_model=None, save_model=None, fine_tune="head"):
     # Get the project's configuration
     config = get_config()
 
@@ -21,7 +21,12 @@ def main(lora_rank=None, lora_alpha=None, load_model=None, save_model=None):
     os.environ["WANDB_LOG_MODEL"] = wandb_config["log_model"]
 
     # Load the model and tokenizer
-    model, tokenizer = load_pretrained_model(lora_rank=lora_rank, lora_alpha=lora_alpha, load_model=load_model, save_model=save_model)
+    model, tokenizer = load_pretrained_model(
+        lora_rank=lora_rank,
+        lora_alpha=lora_alpha,
+        load_model=load_model,
+        save_model=save_model,
+        fine_tune=fine_tune)
 
     # Prepare the datasets and data collator
     imdb_datasets_dict = load_small_imdb()
@@ -70,6 +75,7 @@ def parse_arguments():
     parser.add_argument("--alpha", type=float, help="Specify alpha (optional)")
     parser.add_argument("--load_model", type=str, help="Specify path to load model (optional)")
     parser.add_argument("--save_model", type=str, help="Specify path to save model (optional)")
+    parser.add_argument("--fine_tune", type=str, help="Specify whether to fine-tune the head or the projections (optional)")
 
     args = parser.parse_args()
 
@@ -77,5 +83,5 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    main(lora_rank=args.rank, lora_alpha=args.alpha, load_model=args.load_model, save_model=args.save_model)
+    main(lora_rank=args.rank, lora_alpha=args.alpha, load_model=args.load_model, save_model=args.save_model, fine_tune=args.fine_tune)
 
