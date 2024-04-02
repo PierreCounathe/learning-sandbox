@@ -6,8 +6,9 @@ def get_config():
     """
     return {
         "model_name": "distilbert-base-uncased-finetuned-sst-2-english",
+        "dataset_size": 10_000,
         "training_arguments": {
-            "output_dir": "lora-from-scratch",
+            "output_dir": "lora/output",
             "learning_rate": 2e-5,
             "per_device_train_batch_size": 32,
             "per_device_eval_batch_size": 32,
