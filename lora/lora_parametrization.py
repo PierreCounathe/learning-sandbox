@@ -65,7 +65,7 @@ class LoRADistilBertForSequenceClassification(DistilBertForSequenceClassificatio
                 param.requires_grad = True
     
     def unfreeze_lora_layers(self):
-        for name, param in model.named_parameters():
+        for name, param in self.named_parameters():
             if "lora" in name:
                 print(f"Unfreezing LoRA parameter {name}")
                 param.requires_grad = True
