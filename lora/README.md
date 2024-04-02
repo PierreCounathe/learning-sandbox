@@ -33,7 +33,7 @@ sys.append("content/simple-implementations")
 ```
 In a shell:
 ```shell
-export PYTHONPATH=$PYTHONPATH"/content/simple-implementations
+export PYTHONPATH=$PYTHONPATH:"/content/simple-implementations"
 ```
 
 
