@@ -1,5 +1,7 @@
+import argparse
 import os
 
+import torch
 from transformers import DataCollatorWithPadding, TrainingArguments, Trainer
 import wandb
 
@@ -7,7 +9,8 @@ from lora.load_model import load_pretrained_model
 from lora.utils import load_small_imdb, define_preprocess_function, compute_metrics
 from lora.config import get_config
 
-def main():
+
+def main(lora_rank=None, lora_alpha=None, load_model=None, save_model=None):
     # Get the project's configuration
     config = get_config()
 
@@ -17,9 +20,10 @@ def main():
     os.environ["WANDB_PROJECT"] = wandb_config["project"]
     os.environ["WANDB_LOG_MODEL"] = wandb_config["log_model"]
 
-    # Load the model, tokenizer, prepare the datasets and data collator
-    model, tokenizer = load_pretrained_model()
+    # Load the model and tokenizer
+    model, tokenizer = load_pretrained_model(lora_rank=lora_rank, lora_alpha=lora_alpha, load_model=load_model, save_model=save_model)
 
+    # Prepare the datasets and data collator
     imdb_datasets_dict = load_small_imdb()
     train_dataset = imdb_datasets_dict["train"]
     val_dataset = imdb_datasets_dict["val"]
@@ -29,10 +33,6 @@ def main():
     tokenized_val = val_dataset.map(preprocess_function, batched=True)
 
     data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
-
-    # Freeze base model weights only (do not freeze pre_classifier and classifier)
-    for param in model.base_model.parameters():
-        param.requires_grad = False
 
     # Define the training arguments and the trainer
     training_args = TrainingArguments(
@@ -57,6 +57,25 @@ def main():
 
     # Run a final evaluation after fine-tuning
     trainer.evaluate()
+    
+    if save_model:
+        print(f"Saving model to {save_model}")
+        torch.save(model.state_dict(), save_model)
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Argument parser for your program")
+
+    parser.add_argument("--rank", type=int, help="Specify rank (optional)")
+    parser.add_argument("--alpha", type=float, help="Specify alpha (optional)")
+    parser.add_argument("--load_model", type=str, help="Specify path to load model (optional)")
+    parser.add_argument("--save_model", type=str, help="Specify path to save model (optional)")
+
+    args = parser.parse_args()
+
+    return args
 
 if __name__ == "__main__":
-    main()
+    args = parse_arguments()
+    main(lora_rank=args.rank, lora_alpha=args.alpha, load_model=args.load_model, save_model=args.save_model)
+
