@@ -1,16 +1,20 @@
 from datasets import load_dataset, load_metric
 import numpy as np
 
+from lora.config import get_config
+
 
 def load_small_imdb():
-    """Loads a small subset of the IMDB dataset, sliced into 3000 training examples,
-    300 validation examples, and 300 test examples.
+    """Loads a small subset of the IMDB dataset, sliced into N training examples,
+    N/10 validation examples, and N/10 test examples.
     """
+    dataset_size = get_config()["dataset_size"]
+    
     imdb = load_dataset("imdb")
 
-    small_train_dataset = imdb["train"].shuffle(seed=42).select(list(range(10000)))
-    small_val_dataset = imdb["train"].shuffle(seed=42).select(list(range(10000, 11000)))
-    small_test_dataset = imdb["test"].shuffle(seed=42).select(list(range(1000)))
+    small_train_dataset = imdb["train"].shuffle(seed=42).select(list(range(dataset_size)))
+    small_val_dataset = imdb["train"].shuffle(seed=42).select(list(range(dataset_size, int(1.1*dataset_size))))
+    small_test_dataset = imdb["test"].shuffle(seed=42).select(list(range(int(.1*dataset_size))))
 
     return {
         "train": small_train_dataset,
