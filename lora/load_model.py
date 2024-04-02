@@ -16,6 +16,9 @@ def load_pretrained_model(model_name=CONFIG["model_name"], lora_rank=None, lora_
         lora_alpha = lora_alpha or 1
         print(f"Applying LoRA with rank {lora_rank} and alpha {lora_alpha}")
         model.apply_lora(rank=lora_rank, lora_alpha=lora_alpha)
+    else:
+        print("Unfreezing head layers")
+        model.unfreeze_head_layers()
     if load_model:
         print(f"Loading saved model from {load_model}")
         model.load_state_dict(torch.load(load_model))

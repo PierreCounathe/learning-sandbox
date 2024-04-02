@@ -49,6 +49,9 @@ def lora_parametrization(model, rank=1, lora_alpha=1):
         if "lora" not in name:
             print(f"Freezing original parameter {name}")
             param.requires_grad = False
+        else:
+            print(f"Unfreezing LoRA parameter {name}")
+            param.requires_grad = True
 
 
 class LoRADistilBertForSequenceClassification(DistilBertForSequenceClassification):
@@ -57,3 +60,12 @@ class LoRADistilBertForSequenceClassification(DistilBertForSequenceClassificatio
 
     def apply_lora(self, rank=1, lora_alpha=1):
         lora_parametrization(self, rank, lora_alpha)
+
+    def unfreeze_head_layers(self):
+        for name, param in self.named_parameters():
+            if "classifier" in name or "pre_classifier" in name:
+                print(f"Unfreezing head parameter {name}")
+                param.requires_grad = True
+            else:
+                print(f"Freezing base model parameter {name}")
+                param.requires_grad = False
