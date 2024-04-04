@@ -20,13 +20,19 @@ class LoRAParametrization(nn.Module):
 
 [This report](https://wandb.ai/pierrecounathe/lora-from-scratch/reports/LoRA-vs-Head-fine-tuning--Vmlldzo3Mzc5NDky) contains the W&B logs of the four main runs.
 
-Dataset size (train, val)| Training Configuration | Training Time | Validation F1
+Dataset size (train, val)| Training Configuration \*| Training Time | Validation F1
 | ----------- | ----------- | ----------- | ----------- |
 | N/A, 1k | Raw model from HF   | N/A       | 89.05%
 | 10k, 1k | HEAD 15 epochs   | 15 minutes       | 90.98%
 | 10k, 1k | LoRA (rank=1) 15 epochs    | 30 minutes | 91.29%
-| 10k, 1k | LoRA (rank=16) 15 epochs   | 30 minutes | **91.63%**
+| 10k, 1k | LoRA (rank=8, alpha=8) 15 epochs | 30 minutes | **92.11%** \*\*
+| 10k, 1k | LoRA (rank=16) 15 epochs   | 30 minutes | 91.63%
 | 10k, 1k | LoRA (rank=16) 10 epochs + HEAD 5 epochs | 27 minutes | 91.54%
+| 10k, 1k | LoRA (rank=16, alpha=16) 15 epochs | 30 minutes | **92.09%** \*\*
+
+_\* When not precised, alpha=1_
+
+_\*\* These runs showed evidences of overfitting when trained on 15 epochs. Reported scores are the best f1 scores, achieved with early-stopping. Using a bigger dataset would probably unlock better performances in these settings._
 
 - All training has been conducted on Colab using a V100 GPU, using only 10k samples from the dataset.
 - The HEAD of the model has about 600k parameters. LoRA with rank=1 has about 45k parameters, and LoRA with rank=16 has about 700k parameters.
